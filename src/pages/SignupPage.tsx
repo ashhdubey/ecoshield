@@ -8,8 +8,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Eye, EyeOff, Shield } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
+import { createClient } from "@/lib/supabase";
 
 export default function SignupPage() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +27,7 @@ export default function SignupPage() {
     country: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,7 +38,7 @@ export default function SignupPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (step === 1) {
@@ -57,9 +61,50 @@ export default function SignupPage() {
         return;
       }
       
-      // Would normally send to a backend here
-      toast.success("Account created successfully!");
-      // Would normally redirect after successful signup
+      try {
+        setLoading(true);
+        
+        // Create the user in Supabase Auth
+        const supabase = createClient();
+        const { data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              full_name: formData.name,
+            }
+          }
+        });
+
+        if (error) throw error;
+
+        // Store additional user data in the profiles table
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            { 
+              id: data.user?.id,
+              name: formData.name,
+              email: formData.email,
+              age: parseInt(formData.age),
+              skin_type: formData.skinType,
+              medical_conditions: formData.disease,
+              daily_routine: formData.routine,
+              city: formData.city,
+              country: formData.country,
+            }
+          ]);
+
+        if (profileError) throw profileError;
+        
+        toast.success("Account created successfully! Please verify your email.");
+        navigate("/login");
+      } catch (error: any) {
+        toast.error(error.message || "Error creating account");
+        console.error("Signup error:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -245,8 +290,12 @@ export default function SignupPage() {
             )}
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button type="submit" className="w-full">
-              {step === 1 ? "Continue" : "Create Account"}
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={loading}
+            >
+              {step === 1 ? "Continue" : loading ? "Creating Account..." : "Create Account"}
             </Button>
             {step === 2 && (
               <Button 
@@ -254,6 +303,7 @@ export default function SignupPage() {
                 variant="outline" 
                 className="w-full mt-2"
                 onClick={() => setStep(1)}
+                disabled={loading}
               >
                 Back
               </Button>

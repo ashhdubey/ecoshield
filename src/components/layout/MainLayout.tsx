@@ -1,13 +1,17 @@
 
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Globe, Menu, Shield, X } from "lucide-react";
+import { Globe, LogOut, Menu, Shield, User, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
 
 export default function MainLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const location = useLocation();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -16,6 +20,15 @@ export default function MainLayout() {
     { name: "MyShield", path: "/my-shield" },
     { name: "About", path: "/about" },
   ];
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success("Signed out successfully");
+    } catch (error) {
+      toast.error("Error signing out");
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -34,7 +47,10 @@ export default function MainLayout() {
               <Link
                 key={link.path}
                 to={link.path}
-                className="transition-colors hover:text-ecoshield-sky-blue"
+                className={cn(
+                  "transition-colors hover:text-ecoshield-sky-blue",
+                  location.pathname === link.path && "text-ecoshield-sky-blue"
+                )}
               >
                 {link.name}
               </Link>
@@ -43,12 +59,39 @@ export default function MainLayout() {
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button asChild size="sm" variant="outline" className="hidden md:inline-flex">
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button asChild size="sm" className="hidden md:inline-flex">
-              <Link to="/signup">Sign Up</Link>
-            </Button>
+            {user ? (
+              <>
+                <Button 
+                  asChild 
+                  size="sm" 
+                  variant="outline" 
+                  className="hidden md:inline-flex gap-2"
+                >
+                  <Link to="/my-shield">
+                    <User className="h-4 w-4" />
+                    Profile
+                  </Link>
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="hidden md:inline-flex gap-2"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild size="sm" variant="outline" className="hidden md:inline-flex">
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button asChild size="sm" className="hidden md:inline-flex">
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+              </>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -78,19 +121,45 @@ export default function MainLayout() {
               <Link
                 key={link.path}
                 to={link.path}
-                className="py-2 text-lg"
+                className={cn(
+                  "py-2 text-lg",
+                  location.pathname === link.path && "text-ecoshield-sky-blue"
+                )}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}
               </Link>
             ))}
             <div className="flex flex-col space-y-2 pt-4 border-t">
-              <Button asChild variant="outline">
-                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
-              </Button>
-              <Button asChild>
-                <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
-              </Button>
+              {user ? (
+                <>
+                  <Button asChild variant="outline">
+                    <Link to="/my-shield" onClick={() => setIsMobileMenuOpen(false)}>
+                      <User className="h-4 w-4 mr-2" />
+                      Profile
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild variant="outline">
+                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
