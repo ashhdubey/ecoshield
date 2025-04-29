@@ -1,10 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { AlertTriangle, CheckCircle, FileText, Globe, HandHeart, Leaf, Trophy, Users } from "lucide-react";
+import { Bell, CheckCircle, FileText, Globe, HandHeart, Info, Leaf, Trophy, Users } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function RegenEarthPage() {
   const [joinedMissions, setJoinedMissions] = useState<number[]>([]);
@@ -116,18 +116,45 @@ export default function RegenEarthPage() {
     },
   ];
 
+  // Animation variants
+  const containerAnimation = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
   return (
     <div className="container py-12">
-      <div className="space-y-4 text-center mb-12">
+      <motion.div 
+        className="space-y-4 text-center mb-12"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <h1 className="text-4xl font-bold">RegenEarth</h1>
         <p className="text-muted-foreground max-w-3xl mx-auto">
           Join our collective effort to regenerate and protect our environment. Learn what you can do 
           to prevent further ozone depletion and participate in community initiatives.
         </p>
-      </div>
+      </motion.div>
 
       {/* Social Preventions Section */}
-      <section className="mb-16">
+      <motion.section 
+        className="mb-16"
+        variants={containerAnimation}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.1 }}
+      >
         <div className="flex items-center gap-3 mb-8">
           <div className="bg-ecoshield-sky-blue/20 p-2 rounded-full">
             <Globe className="h-6 w-6 text-ecoshield-sky-blue" />
@@ -137,8 +164,13 @@ export default function RegenEarthPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {preventionTips.map((tip, index) => (
-            <div 
-              key={index} 
+            <motion.div 
+              key={index}
+              variants={itemAnimation}
+              whileHover={{ 
+                y: -5,
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+              }}
               className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-border hover:border-ecoshield-sky-blue/50 transition-all"
             >
               <div className="flex items-start gap-4">
@@ -148,13 +180,19 @@ export default function RegenEarthPage() {
                   <p className="text-sm text-muted-foreground">{tip.description}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* EcoMissions Section */}
-      <section className="mb-16">
+      <motion.section 
+        className="mb-16"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        viewport={{ once: true }}
+      >
         <div className="flex items-center justify-between gap-3 mb-8">
           <div className="flex items-center gap-3">
             <div className="bg-ecoshield-sky-blue/20 p-2 rounded-full">
@@ -162,10 +200,16 @@ export default function RegenEarthPage() {
             </div>
             <h2 className="text-2xl font-semibold">EcoMissions</h2>
           </div>
-          <div className="flex items-center gap-2">
+          <motion.div 
+            className="flex items-center gap-2"
+            animate={{ 
+              scale: joinedMissions.length > 0 ? [1, 1.1, 1] : 1,
+            }}
+            transition={{ duration: 0.5 }}
+          >
             <Trophy className="h-5 w-5 text-amber-500" />
             <span className="font-medium">Your Missions: {joinedMissions.length}</span>
-          </div>
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -214,60 +258,72 @@ export default function RegenEarthPage() {
             </Card>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      {/* Monthly Reports Section */}
-      <section>
-        <div className="flex items-center gap-3 mb-8">
-          <div className="bg-ecoshield-sky-blue/20 p-2 rounded-full">
-            <FileText className="h-6 w-6 text-ecoshield-sky-blue" />
+        {/* Monthly Reports Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className="bg-ecoshield-sky-blue/20 p-2 rounded-full">
+              <FileText className="h-6 w-6 text-ecoshield-sky-blue" />
+            </div>
+            <h2 className="text-2xl font-semibold">Monthly Environmental Reports</h2>
           </div>
-          <h2 className="text-2xl font-semibold">Monthly Environmental Reports</h2>
-        </div>
 
-        <div className="space-y-8">
-          {monthlyReports.map((report, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>{report.month} Report</CardTitle>
-                  <Badge className="bg-ecoshield-sky-blue hover:bg-ecoshield-sky-blue/90">Latest</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Leaf className="h-5 w-5 text-ecoshield-deep-green" />
-                    <h3 className="font-medium">Highlights</h3>
-                  </div>
-                  <ul className="list-disc pl-10 space-y-2 text-muted-foreground">
-                    {report.highlights.map((highlight, idx) => (
-                      <li key={idx}>{highlight}</li>
-                    ))}
-                  </ul>
-                </div>
+          <div className="space-y-8">
+            {monthlyReports.map((report, index) => (
+              <motion.div 
+                key={index}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>{report.month} Report</CardTitle>
+                      <Badge className="bg-ecoshield-sky-blue hover:bg-ecoshield-sky-blue/90">Latest</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Leaf className="h-5 w-5 text-ecoshield-deep-green" />
+                        <h3 className="font-medium">Highlights</h3>
+                      </div>
+                      <ul className="list-disc pl-10 space-y-2 text-muted-foreground">
+                        {report.highlights.map((highlight, idx) => (
+                          <li key={idx}>{highlight}</li>
+                        ))}
+                      </ul>
+                    </div>
 
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <AlertTriangle className="h-5 w-5 text-amber-500" />
-                    <h3 className="font-medium">Challenge Areas</h3>
-                  </div>
-                  <ul className="list-disc pl-10 space-y-2 text-muted-foreground">
-                    {report.challengeAreas.map((challenge, idx) => (
-                      <li key={idx}>{challenge}</li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Download Full Report
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Info className="h-5 w-5 text-amber-500" />
+                        <h3 className="font-medium">Challenge Areas</h3>
+                      </div>
+                      <ul className="list-disc pl-10 space-y-2 text-muted-foreground">
+                        {report.challengeAreas.map((challenge, idx) => (
+                          <li key={idx}>{challenge}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" className="w-full">
+                      Download Full Report
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+      </motion.section>
     </div>
   );
 }

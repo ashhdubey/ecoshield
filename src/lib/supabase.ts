@@ -1,19 +1,18 @@
 
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder-url.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+// This is a mock file for frontend-only development
+// In a real app, this would connect to a backend service
 
 export const createClient = () => {
-  // For development only: log a warning message instead of throwing an error
-  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-    console.warn('Supabase URL and Anon Key not defined in environment variables. Using placeholder values for development.');
-  }
+  console.log('Using mock Supabase client for frontend-only development');
   
-  return createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+  // Return a mock client with the methods we need
+  return {
     auth: {
-      persistSession: true,
-      storageKey: 'ecoshield-auth',
+      getSession: async () => ({ data: { session: null } }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      signOut: async () => ({}),
+      signInWithPassword: async () => ({ data: { user: { id: '123', email: 'demo@example.com' }, session: {} }, error: null }),
+      signUp: async () => ({ data: { user: { id: '123', email: 'demo@example.com' }, session: {} }, error: null })
     }
-  });
+  };
 };
