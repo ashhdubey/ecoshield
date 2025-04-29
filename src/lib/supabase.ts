@@ -13,6 +13,28 @@ export const createClient = () => {
       signOut: async () => ({}),
       signInWithPassword: async () => ({ data: { user: { id: '123', email: 'demo@example.com' }, session: {} }, error: null }),
       signUp: async () => ({ data: { user: { id: '123', email: 'demo@example.com' }, session: {} }, error: null })
-    }
+    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: async () => ({ data: null, error: null }),
+          order: () => ({
+            limit: () => Promise.resolve({ data: [], error: null })
+          })
+        }),
+        order: () => ({
+          limit: () => Promise.resolve({ data: [], error: null })
+        })
+      }),
+      insert: () => ({
+        select: () => Promise.resolve({ data: null, error: null })
+      }),
+      update: () => ({
+        eq: () => Promise.resolve({ data: null, error: null })
+      }),
+      delete: () => ({
+        eq: () => Promise.resolve({ error: null })
+      })
+    })
   };
 };
