@@ -1,4 +1,3 @@
-
 import { createClient } from "@/lib/supabase";
 
 export const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
@@ -166,7 +165,7 @@ export const saveEnvironmentalData = async (userId: string, data: EnvironmentalD
   try {
     const supabase = createClient();
     
-    const { error } = await supabase
+    await supabase
       .from('env_data')
       .insert([
         {
@@ -179,12 +178,8 @@ export const saveEnvironmentalData = async (userId: string, data: EnvironmentalD
           humidity: data.weather.humidity,
           weather_description: data.weather.weather_description,
           timestamp: new Date().toISOString(),
-        },
+        }
       ]);
-    
-    if (error) {
-      throw error;
-    }
   } catch (error) {
     console.error('Error saving environmental data:', error);
     throw error;
@@ -196,16 +191,12 @@ export const getUserEnvironmentalHistory = async (userId: string, limit = 7): Pr
   try {
     const supabase = createClient();
     
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('env_data')
       .select('*')
       .eq('user_id', userId)
       .order('timestamp', { ascending: false })
       .limit(limit);
-    
-    if (error) {
-      throw error;
-    }
     
     return data || [];
   } catch (error) {
@@ -219,15 +210,11 @@ export const getUserProfile = async (userId: string) => {
   try {
     const supabase = createClient();
     
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
-    
-    if (error) {
-      throw error;
-    }
     
     return data;
   } catch (error) {
@@ -241,14 +228,10 @@ export const updateUserProfile = async (userId: string, profileData: any) => {
   try {
     const supabase = createClient();
     
-    const { error } = await supabase
+    await supabase
       .from('profiles')
       .update(profileData)
       .eq('id', userId);
-    
-    if (error) {
-      throw error;
-    }
     
     return true;
   } catch (error) {

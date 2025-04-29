@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,7 +78,7 @@ export default function SignupPage() {
         if (error) throw error;
 
         // Store additional user data in the profiles table
-        const { error: profileError } = await supabase
+        await supabase
           .from('profiles')
           .insert([
             { 
@@ -94,8 +93,6 @@ export default function SignupPage() {
               country: formData.country,
             }
           ]);
-
-        if (profileError) throw profileError;
         
         toast.success("Account created successfully! Please verify your email.");
         navigate("/login");
