@@ -1,3 +1,7 @@
+import AshishImg from '../images/Ashish.jpeg';
+import AshutoshImg from '../images/Ashutosh.jpg';
+import DharuvImg from '../images/dharuv.jpeg';
+import DibyanshuImg from '../images/Dibyanshu.jpeg';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,28 +45,28 @@ export default function AboutPage() {
 
   const teamMembers = [
     {
-      name: "Dr. Emily Chen",
-      role: "Environmental Scientist",
-      bio: "Ph.D. in Environmental Science with over 10 years of research on ozone depletion and UV radiation effects.",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+      name: "Ashish Kumar Dubey",
+      role: "Technical Lead & Backend Engineer",
+      bio: "BCA student, backend developer & team lead with interest in Java and AI.",
+      image: AshishImg,
     },
     {
-      name: "Marcus Johnson",
-      role: "Tech Lead",
-      bio: "Former NASA engineer specializing in environmental monitoring systems and data analysis.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+      name: "Ashutosh Pandey",
+      role: "Data Engineer & Research Analyst",
+      bio: "BCA student with skills in design, research, and databases. Interested in Data and System Design roles.",
+      image: AshutoshImg,
     },
     {
-      name: "Sophia Williams",
-      role: "Public Health Specialist",
-      bio: "Specializes in the relationship between environmental factors and public health outcomes.",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+      name: "Dharuv Singh",
+      role: "Media & Visual Design Head",
+      bio: "Creative BCA student skilled in media, presentation, and design. Aspires to work in digital communication.",
+      image: DharuvImg,
     },
     {
-      name: "Dr. James Rodriguez",
-      role: "Dermatologist",
-      bio: "Expert in UV radiation effects on skin health and prevention strategies for sun damage.",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+      name: "Dibyanshu kumar dubey",
+      role: "Frontend Lead & UI/UX Strategist",
+      bio: "BCA student focused on frontend development and UI/UX. Aims to be a top-tier Frontend Engineer.",
+      image: DibyanshuImg,
     },
   ];
 
