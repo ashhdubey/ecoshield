@@ -1,5 +1,5 @@
 
-import { FileText, Globe, HandHeart } from "lucide-react";
+import { FileText, Globe, HandHeart, CheckCircle } from "lucide-react";
 import { ReactNode } from "react";
 
 export interface PreventionTip {
