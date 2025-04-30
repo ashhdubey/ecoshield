@@ -31,7 +31,9 @@ const Earth = ({ size = 1 }: { size?: number }) => {
           color="#2233ff"
           emissive="#57cbff"
           emissiveIntensity={0.2}
-          roughness={1}
+          // Removed roughness property as it doesn't exist on MeshPhongMaterial
+          // Using shininess instead which is supported
+          shininess={5}
         />
       </mesh>
       
