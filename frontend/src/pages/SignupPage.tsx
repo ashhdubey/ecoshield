@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Shield } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Use axios for HTTP requests
+import axios, { AxiosError }  from "axios"; // Use axios for HTTP requests
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -76,37 +76,14 @@ export default function SignupPage() {
           country: formData.country,
         });
 
-<<<<<<< HEAD:frontend/src/pages/SignupPage.tsx
         if (response.data.message === "User registered successfully.") {
           toast.success("Account created successfully! Please verify your email.");
           navigate("/login");
         }
-=======
-        if (error) throw error;
-
-        // Store additional user data in the profiles table
-        await supabase
-          .from('profiles')
-          .insert([
-            { 
-              id: data.user?.id,
-              name: formData.name,
-              email: formData.email,
-              age: parseInt(formData.age),
-              skin_type: formData.skinType,
-              medical_conditions: formData.disease,
-              daily_routine: formData.routine,
-              city: formData.city,
-              country: formData.country,
-            }
-          ]);
-        
-        toast.success("Account created successfully! Please verify your email.");
-        navigate("/login");
->>>>>>> 427a25945fe099e72b7a82bc50881788c4446763:src/pages/SignupPage.tsx
-      } catch (error: any) {
-        toast.error(error.message || "Error creating account");
-        console.error("Signup error:", error);
+      } catch (error: unknown) {
+        const err = error as AxiosError<{ message?: string }>;
+        toast.error(err.response?.data?.message || "Error creating account");
+        console.error("Signup error:", err);
       } finally {
         setLoading(false);
       }

@@ -1,7 +1,6 @@
-// src/pages/MyShieldPage.tsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios, { Axios } from 'axios';
+import axios from "axios";
 import {
   Sun,
   Wind,
@@ -13,7 +12,7 @@ import {
   Clock,
   Timer,
   Umbrella,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import {
   Card,
@@ -21,11 +20,10 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { log } from "console";
 
 // ---------- Utility functions ----------
 const getUVLevel = (index: number) => {
@@ -49,7 +47,8 @@ const getRecommendations = (uv: number, aqi: number): string[] => {
   const recs: string[] = [];
 
   // UV
-  if (uv <= 2) recs.push("Low UV risk. No special protection needed.");
+  if (uv === 0) recs.push("No UV risk at night. No sun protection needed.");
+  else if (uv <= 2) recs.push("Low UV risk. No special protection needed.");
   else if (uv <= 5) recs.push("Moderate UV risk. Wear SPF 30+ sunscreen and stay in shade midday.");
   else if (uv <= 7) recs.push("High UV risk. Wear protective clothing and limit sun exposure 10am–4pm.");
   else recs.push("Extreme UV risk. Avoid going out midday. Use SPF 50+ and full protection gear.");
@@ -73,61 +72,73 @@ export default function MyShieldPage() {
   const [shieldScore, setShieldScore] = useState(0);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [UData, setUserData] = useState(null);
-
-
+  const [error, setError] = useState<string | null>(null);
 
   const userData = {
     name: "Guest User",
     skinType: "Unknown",
     location: "New York, USA",
+    lat: 40.7128, // Example coordinates for New York
+    lon: -74.0060,
   };
 
-  const getData = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/myshield");
-      setUserData(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const API_KEY = import.meta.env.VITE_OWM_API_KEY || "e6756cd00b8a8749d5a5ee996ec21014"; // Fallback for development
 
   useEffect(() => {
-    getData();
-
     const fetchData = async () => {
       setIsLoading(true);
+      setError(null);
 
+      try {
+        // Step 1: Fetch weather data (temperature, humidity)
+        const weatherResponse = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${userData.lat}&lon=${userData.lon}&appid=${API_KEY}&units=metric`
+        );
+        const temp = Math.round(weatherResponse.data.main.temp);
+        const hum = weatherResponse.data.main.humidity;
+        setTemperature(temp);
+        setHumidity(hum);
 
+        // Step 2: Fetch UV index
+        const uvResponse = await axios.get(
+          `https://api.openweathermap.org/data/2.5/uvi?lat=${userData.lat}&lon=${userData.lon}&appid=${API_KEY}`
+        );
+        const uv = Math.round(uvResponse.data.value);
+        setUvIndex(uv);
 
+        // Step 3: Fetch AQI
+        const aqiResponse = await axios.get(
+          `https://api.openweathermap.org/data/2.5/air_pollution?lat=${userData.lat}&lon=${userData.lon}&appid=${API_KEY}`
+        );
+        const aqi = aqiResponse.data.list[0].main.aqi * 50; // Scale AQI (1-5) to approximate 0-300 range
+        setAqiIndex(aqi);
 
+        // Step 4: Calculate shield score (example logic)
+        const score = Math.min(
+          5,
+          Math.round((uv / 2 + aqi / 60 + (temp > 30 ? 1 : 0) + (hum > 60 ? 1 : 0)) / 2)
+        );
+        setShieldScore(score);
 
+        // Step 5: Set last updated
+        setLastUpdated(new Date());
 
-
-
-      // Simulate delay
-      await new Promise((r) => setTimeout(r, 1000));
-
-      // Mock environmental data
-      const mockUV = Math.floor(Math.random() * 11);
-      const mockAQI = Math.floor(Math.random() * 300);
-      // const mockTemp = Math.floor(Math.random() * 35) - 5;
-      // const mockHumidity = Math.floor(Math.random() * 100);
-      const mockScore = Math.floor(Math.random() * 5) + 1;
-
-      setUvIndex(mockUV);
-      setAqiIndex(mockAQI);
-      // setTemperature(mockTemp);
-      // setHumidity(mockHumidity);
-      setShieldScore(mockScore);
-      setLastUpdated(new Date());
-
-      setIsLoading(false);
+        // Console log values for debugging
+        console.log("UV Index:", uv);
+        console.log("AQI:", aqi);
+        console.log("Temperature (°C):", temp);
+        console.log("Humidity (%):", hum);
+        console.log("Shield Score:", score);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to fetch environmental data. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [API_KEY, userData.lat, userData.lon]);
 
   const uvLevel = getUVLevel(uvIndex);
   const aqiLevel = getAQILevel(aqiIndex);
@@ -156,6 +167,15 @@ export default function MyShieldPage() {
         )}
       </div>
 
+      {/* Error Message */}
+      {error && (
+        <Alert className="max-w-lg mx-auto bg-red-50 text-red-900">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       {/* Loading */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
@@ -182,8 +202,7 @@ export default function MyShieldPage() {
                   {[...Array(5)].map((_, i) => (
                     <Shield
                       key={i}
-                      className={`h-6 w-6 ${i < shieldScore ? "text-blue-500" : "text-muted"
-                        }`}
+                      className={`h-6 w-6 ${i < shieldScore ? "text-blue-500" : "text-muted"}`}
                       fill={i < shieldScore ? "currentColor" : "none"}
                     />
                   ))}
@@ -204,10 +223,10 @@ export default function MyShieldPage() {
                     {shieldScore <= 2
                       ? "Low risk: Minimal protection needed."
                       : shieldScore <= 3
-                        ? "Moderate risk: Take standard precautions."
-                        : shieldScore <= 4
-                          ? "High risk: Limit outdoor time and use protection."
-                          : "Extreme risk: Avoid outdoor exposure if possible."}
+                      ? "Moderate risk: Take standard precautions."
+                      : shieldScore <= 4
+                      ? "High risk: Limit outdoor time and use protection."
+                      : "Extreme risk: Avoid outdoor exposure if possible."}
                   </p>
                 </div>
               </div>
@@ -243,9 +262,7 @@ export default function MyShieldPage() {
               icon={<Thermometer className="text-red-500" />}
               title="Temperature"
               value={`${temperature}°C`}
-              level={
-                temperature < 10 ? "Cool" : temperature < 25 ? "Mild" : "Hot"
-              }
+              level={temperature < 10 ? "Cool" : temperature < 25 ? "Mild" : "Hot"}
               color="bg-red-400"
             />
             {/* Humidity */}
@@ -253,9 +270,7 @@ export default function MyShieldPage() {
               icon={<Droplets className="text-blue-500" />}
               title="Humidity"
               value={`${humidity}%`}
-              level={
-                humidity < 30 ? "Dry" : humidity < 60 ? "Comfortable" : "Humid"
-              }
+              level={humidity < 30 ? "Dry" : humidity < 60 ? "Comfortable" : "Humid"}
               color="bg-blue-400"
             />
           </div>

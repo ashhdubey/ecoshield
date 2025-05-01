@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import EarthModel from "@/components/3d/EarthModel";
+import EarthModel from "../3d/EarthModel"
 
 export default function MainLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -174,8 +174,7 @@ export default function MainLayout() {
         <Outlet />
       </main>
 
-<<<<<<< HEAD:frontend/src/components/layout/MainLayout.tsx
-      {/* <footer className="border-t py-8 bg-muted/40">
+       <footer className="border-t py-8 bg-muted/40">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
@@ -186,48 +185,6 @@ export default function MainLayout() {
               <p className="text-sm text-muted-foreground">
                 Protecting you and our planet from harmful UV radiation.
               </p>
-=======
-      <footer className="border-t py-8 bg-muted/40 relative overflow-hidden">
-        {/* Background animated gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-ecoshield-sky-blue/5 to-ecoshield-deep-green/5 animate-pulse z-0"></div>
-        
-        <div className="container relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            <div className="md:col-span-4">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="flex flex-col h-full justify-between"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Shield className="h-6 w-6 text-ecoshield-sky-blue" />
-                    <span className="text-xl font-bold">EcoShield</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Protecting you and our planet from harmful UV radiation.
-                  </p>
-                </div>
-                <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  viewport={{ once: true }}
-                  className="mt-4 md:mt-0"
-                >
-                  <Button 
-                    asChild 
-                    size="sm" 
-                    variant="outline" 
-                    className="hover-scale"
-                  >
-                    <Link to="/about">Learn More</Link>
-                  </Button>
-                </motion.div>
-              </motion.div>
->>>>>>> 427a25945fe099e72b7a82bc50881788c4446763:src/components/layout/MainLayout.tsx
             </div>
 
             <div className="md:col-span-4">
@@ -315,7 +272,7 @@ export default function MainLayout() {
             <p>&copy; {new Date().getFullYear()} EcoShield. All rights reserved.</p>
           </motion.div>
         </div>
-      </footer> */}
+      </footer> 
 
       <footer className="border-t py-8 bg-muted/40">
         <div className="overflow-hidden h-[85vh] sm:h-screen">

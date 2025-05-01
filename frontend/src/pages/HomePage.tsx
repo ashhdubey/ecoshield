@@ -82,7 +82,6 @@ export default function HomePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-<<<<<<< HEAD:frontend/src/pages/HomePage.tsx
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ecoshield-sky-blue/10 to-background" />
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -153,15 +152,7 @@ export default function HomePage() {
             </motion.div>
           </div>
         </div>
-      </motion.section>
-=======
-        <h1 className="text-4xl font-bold">Protect Yourself, Protect Earth</h1>
-        <p className="text-muted-foreground max-w-3xl mx-auto">
-          EcoShield empowers you with knowledge and tools to safeguard yourself 
-          from UV radiation while promoting environmental awareness.
-        </p>
       </motion.div>
->>>>>>> 427a25945fe099e72b7a82bc50881788c4446763:src/pages/HomePage.tsx
 
       {/* UV Index Section */}
       <motion.section 
