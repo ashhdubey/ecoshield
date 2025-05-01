@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -114,6 +115,31 @@
   .story-link {
     @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
   }
+  
+  /* New footer animations */
+  .footer-link {
+    @apply relative overflow-hidden inline-block;
+  }
+  
+  .footer-link:after {
+    @apply content-[''] absolute w-full h-0.5 bg-primary left-0 bottom-0 transform -translate-x-full transition-transform duration-300;
+  }
+  
+  .footer-link:hover:after {
+    @apply translate-x-0;
+  }
+  
+  .glow-on-hover {
+    @apply relative overflow-hidden;
+  }
+  
+  .glow-on-hover:before {
+    @apply content-[''] absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary/20 to-secondary/20 opacity-0 transition-opacity duration-300;
+  }
+  
+  .glow-on-hover:hover:before {
+    @apply opacity-100;
+  }
 }
 
 /* Animations */
@@ -156,4 +182,31 @@
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* New footer animations */
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(70px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(70px) rotate(-360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit 20s linear infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.8);
+  }
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
 }

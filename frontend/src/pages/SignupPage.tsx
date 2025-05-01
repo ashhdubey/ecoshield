@@ -76,10 +76,34 @@ export default function SignupPage() {
           country: formData.country,
         });
 
+<<<<<<< HEAD:frontend/src/pages/SignupPage.tsx
         if (response.data.message === "User registered successfully.") {
           toast.success("Account created successfully! Please verify your email.");
           navigate("/login");
         }
+=======
+        if (error) throw error;
+
+        // Store additional user data in the profiles table
+        await supabase
+          .from('profiles')
+          .insert([
+            { 
+              id: data.user?.id,
+              name: formData.name,
+              email: formData.email,
+              age: parseInt(formData.age),
+              skin_type: formData.skinType,
+              medical_conditions: formData.disease,
+              daily_routine: formData.routine,
+              city: formData.city,
+              country: formData.country,
+            }
+          ]);
+        
+        toast.success("Account created successfully! Please verify your email.");
+        navigate("/login");
+>>>>>>> 427a25945fe099e72b7a82bc50881788c4446763:src/pages/SignupPage.tsx
       } catch (error: any) {
         toast.error(error.message || "Error creating account");
         console.error("Signup error:", error);

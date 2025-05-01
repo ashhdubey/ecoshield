@@ -11,8 +11,32 @@ export const createClient = () => {
       getSession: async () => ({ data: { session: null } }),
       onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       signOut: async () => ({}),
-      signInWithPassword: async () => ({ data: { user: { id: '123', email: 'demo@example.com' }, session: {} }, error: null }),
-      signUp: async () => ({ data: { user: { id: '123', email: 'demo@example.com' }, session: {} }, error: null })
-    }
+      signInWithPassword: async ({ email, password }: { email: string; password: string }) => 
+        ({ data: { user: { id: '123', email }, session: {} }, error: null }),
+      signUp: async ({ email, password, options }: { email: string; password: string; options?: any }) => 
+        ({ data: { user: { id: '123', email }, session: {} }, error: null })
+    },
+    from: (table: string) => ({
+      select: (columns: string = '*') => ({
+        eq: (column: string, value: any) => ({
+          single: async () => ({ data: null, error: null }),
+          order: (column: string, { ascending = true }: { ascending: boolean }) => ({
+            limit: (limit: number) => Promise.resolve({ data: [], error: null })
+          })
+        }),
+        order: (column: string, { ascending = true }: { ascending: boolean }) => ({
+          limit: (limit: number) => Promise.resolve({ data: [], error: null })
+        })
+      }),
+      insert: (values: any) => ({
+        select: (columns: string = '*') => Promise.resolve({ data: null, error: null })
+      }),
+      update: (values: any) => ({
+        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null })
+      }),
+      delete: () => ({
+        eq: (column: string, value: any) => Promise.resolve({ error: null })
+      })
+    })
   };
 };
