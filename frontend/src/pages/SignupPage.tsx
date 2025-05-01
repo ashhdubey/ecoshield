@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +8,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Shield } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
-import { createClient } from "@/lib/supabase";
+import axios from "axios"; // Use axios for HTTP requests
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ export default function SignupPage() {
     confirmPassword: "",
     age: "",
     skinType: "",
-    disease: "",
+    // disease: "",
     routine: "",
     city: "",
     country: "",
@@ -40,19 +39,19 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (step === 1) {
       // Validate first step
       if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
         toast.error("Please fill in all required fields");
         return;
       }
-      
+
       if (formData.password !== formData.confirmPassword) {
         toast.error("Passwords do not match");
         return;
       }
-      
+
       setStep(2);
     } else {
       // Validate second step
@@ -60,45 +59,27 @@ export default function SignupPage() {
         toast.error("Please fill in all required fields");
         return;
       }
-      
+
       try {
         setLoading(true);
-        
-        // Create the user in Supabase Auth
-        const supabase = createClient();
-        const { data, error } = await supabase.auth.signUp({
+
+        // Send data to backend API (Express + MongoDB)
+        const response = await axios.post("http://localhost:5000/signup", {
+          name: formData.name,
           email: formData.email,
           password: formData.password,
-          options: {
-            data: {
-              full_name: formData.name,
-            }
-          }
+          age: formData.age,
+          skinType: formData.skinType,
+          // disease: formData.disease,
+          routine: formData.routine,
+          city: formData.city,
+          country: formData.country,
         });
 
-        if (error) throw error;
-
-        // Store additional user data in the profiles table
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            { 
-              id: data.user?.id,
-              name: formData.name,
-              email: formData.email,
-              age: parseInt(formData.age),
-              skin_type: formData.skinType,
-              medical_conditions: formData.disease,
-              daily_routine: formData.routine,
-              city: formData.city,
-              country: formData.country,
-            }
-          ]);
-
-        if (profileError) throw profileError;
-        
-        toast.success("Account created successfully! Please verify your email.");
-        navigate("/login");
+        if (response.data.message === "User registered successfully.") {
+          toast.success("Account created successfully! Please verify your email.");
+          navigate("/login");
+        }
       } catch (error: any) {
         toast.error(error.message || "Error creating account");
         console.error("Signup error:", error);
@@ -113,12 +94,10 @@ export default function SignupPage() {
   };
 
   const skinTypes = [
-    { value: "type1", label: "Type I - Always burns, never tans" },
-    { value: "type2", label: "Type II - Usually burns, tans minimally" },
-    { value: "type3", label: "Type III - Sometimes burns, tans uniformly" },
-    { value: "type4", label: "Type IV - Burns minimally, tans easily" },
-    { value: "type5", label: "Type V - Rarely burns, tans darkly" },
-    { value: "type6", label: "Type VI - Never burns, deeply pigmented" },
+    { value: "type1", label: "Type I - Normal Skin" },
+    { value: "type2", label: "Type II - Dry Skin" },
+    { value: "type3", label: "Type III - Oily Skin" },
+    { value: "type4", label: "Type IV - Sensitive Skin" },
   ];
 
   const routines = [
@@ -236,7 +215,7 @@ export default function SignupPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label htmlFor="disease">Medical Conditions (Optional)</Label>
                   <Input 
                     id="disease" 
@@ -245,7 +224,7 @@ export default function SignupPage() {
                     value={formData.disease}
                     onChange={handleChange}
                   />
-                </div>
+                </div> */}
                 <div className="space-y-2">
                   <Label htmlFor="routine">Daily Routine</Label>
                   <Select 
@@ -270,7 +249,7 @@ export default function SignupPage() {
                     <Input 
                       id="city" 
                       name="city" 
-                      placeholder="New York" 
+                      placeholder="Prayagraj" 
                       value={formData.city}
                       onChange={handleChange}
                     />
@@ -280,7 +259,7 @@ export default function SignupPage() {
                     <Input 
                       id="country" 
                       name="country" 
-                      placeholder="USA" 
+                      placeholder="India" 
                       value={formData.country}
                       onChange={handleChange}
                     />

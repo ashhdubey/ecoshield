@@ -39,7 +39,7 @@ export default function HomePage() {
     const timer = setTimeout(() => {
       // Simulated UV index for demo
       setUvIndex(Math.floor(Math.random() * 11));
-      setLocation("New York, USA");
+      setLocation("New Delhi, India");
     }, 1500);
 
     return () => clearTimeout(timer);
@@ -120,8 +120,7 @@ export default function HomePage() {
                 <span className="text-ecoshield-sky-blue">Protect Earth</span>
               </h1>
               <p className="text-lg text-muted-foreground">
-                EcoShield empowers you with knowledge and tools to safeguard yourself 
-                from UV radiation while promoting environmental awareness.
+              EcoShield protects you from harmful UV rays and the scorching heat of the sun, while also helping to preserve the Earth and support a healthier society.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
