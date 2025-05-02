@@ -74,13 +74,16 @@ export default function MyShieldPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // user data  
+
   const userData = {
     name: "Guest User",
     skinType: "Unknown",
-    location: "New York, USA",
-    lat: 40.7128, // Example coordinates for New York
-    lon: -74.0060,
+    location: "Prayagraj, India",
+    lat: 25.4358,  // Latitude for Prayagraj
+    lon: 81.8463   // Longitude for Prayagraj
   };
+
 
   const API_KEY = import.meta.env.VITE_OWM_API_KEY || "e6756cd00b8a8749d5a5ee996ec21014"; // Fallback for development
 

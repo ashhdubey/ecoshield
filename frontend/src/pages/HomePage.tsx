@@ -205,7 +205,7 @@ export default function HomePage() {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.5 }}
                     >
-                      <h3 className="text-xl font-semibold">{getUVText(uvIndex)}</h3>
+                      <h3 className="text-xl text-center font-semibold">{getUVText(uvIndex)}</h3>
                       <p className="text-muted-foreground mt-2 text-center">
                         {uvIndex <= 2 
                           ? "Low risk of harm from UV rays." 

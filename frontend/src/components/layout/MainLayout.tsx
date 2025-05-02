@@ -174,105 +174,7 @@ export default function MainLayout() {
         <Outlet />
       </main>
 
-       <footer className="border-t py-8 bg-muted/40">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Shield className="h-6 w-6 text-ecoshield-sky-blue" />
-                <span className="text-xl font-bold">EcoShield</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Protecting you and our planet from harmful UV radiation.
-              </p>
-            </div>
-
-            <div className="md:col-span-4">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="font-semibold mb-4 story-link inline-block">Quick Links</h3>
-                <ul className="space-y-2 text-sm">
-                  <motion.div
-                    variants={{
-                      hidden: { opacity: 0 },
-                      show: {
-                        opacity: 1,
-                        transition: {
-                          staggerChildren: 0.1
-                        }
-                      }
-                    }}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true }}
-                  >
-                    {[
-                      { name: "Home", path: "/" },
-                      { name: "Chronicle", path: "/chronicle" },
-                      { name: "RegenEarth", path: "/regen-earth" },
-                      { name: "MyShield", path: "/my-shield" },
-                      { name: "About", path: "/about" },
-                    ].map((link, i) => (
-                      <motion.li 
-                        key={link.path}
-                        variants={{
-                          hidden: { opacity: 0, x: -20 },
-                          show: { opacity: 1, x: 0 }
-                        }}
-                      >
-                        <Link
-                          to={link.path}
-                          className="text-muted-foreground hover:text-foreground transition-colors story-link"
-                        >
-                          {link.name}
-                        </Link>
-                      </motion.li>
-                    ))}
-                  </motion.div>
-                </ul>
-              </motion.div>
-            </div>
-            
-            <div className="md:col-span-4 flex flex-col items-center md:items-end">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-                className="w-full"
-              >
-                <h3 className="font-semibold mb-4 text-center md:text-right">Our Planet</h3>
-                <div className="flex flex-col items-center">
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="hover-scale"
-                  >
-                    <EarthModel size={1} className="mx-auto" />
-                  </motion.div>
-                  <p className="text-xs text-muted-foreground text-center mt-2">
-                    Together we can heal the ozone layer
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.6 }}
-            viewport={{ once: true }}
-            className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground"
-          >
-            <p>&copy; {new Date().getFullYear()} EcoShield. All rights reserved.</p>
-          </motion.div>
-        </div>
-      </footer> 
+ 
 
       <footer className="border-t py-8 bg-muted/40">
         <div className="overflow-hidden h-[85vh] sm:h-screen">
@@ -328,7 +230,7 @@ export default function MainLayout() {
                         <a
                           key={item}
                           className="block text-sm opacity-85 capitalize"
-                          href="#"
+                          href="https://www.instagram.com/ecoshield_uu/"
                         >
                           {item}
                         </a>
